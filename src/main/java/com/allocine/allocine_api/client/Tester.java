@@ -29,7 +29,7 @@ public class Tester {
                 Arrays.asList("Actor 5", "Actor 6"), 18,
                 new Date(), Arrays.asList(new Session(new Date(), "Cinema5")));
 
-        Response postResponse = service.path("post")
+        Response postResponse = service.path("movies").path("post")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(newMovie));
 
@@ -42,7 +42,7 @@ public class Tester {
 
         // Test GET route to retrieve all movies
         System.out.println("Testing GET /movies");
-        List<Movie> allMovies = service.path("get")
+        List<Movie> allMovies = service.path("movies").path("get")
                 .request(MediaType.APPLICATION_JSON)
                 .get(new GenericType<List<Movie>>() {});
         allMovies.forEach(movie -> System.out.println(movie.getTitle()));
@@ -51,7 +51,7 @@ public class Tester {
         // Test GET route to retrieve a specific movie by ID
         int movieId = 1; // Specify the ID of the movie to retrieve
         System.out.println("Testing GET /movies/" + movieId);
-        Movie movieById = service.path("get").path(String.valueOf(movieId))
+        Movie movieById = service.path("movies").path("get").path(String.valueOf(movieId))
                 .request(MediaType.APPLICATION_JSON)
                 .get(Movie.class);
         if (movieById != null) {
@@ -64,7 +64,7 @@ public class Tester {
         // Test GET route to retrieve movies for a specified cinema
         String cinema = "Cinema5"; // Specify the cinema to retrieve movies for
         System.out.println("Testing GET /movies/cinemas/" + cinema);
-        List<Movie> moviesByCinema = service.path("cinemas").path(cinema)
+        List<Movie> moviesByCinema = service.path("cinemas").path("get").path(cinema)
                 .request(MediaType.APPLICATION_JSON)
                 .get(new GenericType<List<Movie>>() {});
         if (!moviesByCinema.isEmpty()) {

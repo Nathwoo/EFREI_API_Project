@@ -23,7 +23,7 @@ public class MovieResource {
     }
 
     @POST
-    @Path("/post")
+    @Path("/movies/post")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addMovie(Movie movie) {
@@ -38,7 +38,7 @@ public class MovieResource {
     }
 
     @GET
-    @Path("/get")
+    @Path("/movies/get")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllMovies() {
         List<Movie> movies = movieDao.getAllMovies();
@@ -46,7 +46,7 @@ public class MovieResource {
     }
 
     @GET
-    @Path("/get/{id}")
+    @Path("/movies/get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMovieById(@PathParam("id") int id) {
         Movie movie = movieDao.getMovieById(id);
@@ -57,7 +57,7 @@ public class MovieResource {
     }
 
     @GET
-    @Path("/cinemas/{cinema}")
+    @Path("/cinemas/get/{cinema}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMoviesByCinema(@PathParam("cinema") String cinema) {
         List<Movie> movies = movieDao.getMoviesByCinema(cinema);
