@@ -1,6 +1,5 @@
 package com.allocine.allocine_api.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.Date;
 import java.util.List;
@@ -19,6 +18,9 @@ public class Movie {
 
     // Constructors, getters, and setters
 
+    public Movie() {
+
+    }
 
     public Movie(int id, String title, int duration, String language, List<String> subtitlesLanguages,
                  String director, List<String> mainActors, int minimalAge, Date releaseDate,

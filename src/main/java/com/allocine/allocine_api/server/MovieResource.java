@@ -2,6 +2,7 @@ package com.allocine.allocine_api.server;
 
 import com.allocine.allocine_api.dao.MovieDao;
 import com.allocine.allocine_api.model.Movie;
+import com.allocine.allocine_api.model.Session;
 
 
 import java.util.Arrays;
@@ -14,6 +15,12 @@ import javax.ws.rs.core.Response;
 @Path("/")
 public class MovieResource {
     MovieDao movieDao = new MovieDao();
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response apiStatus() {
+        return Response.ok().entity("API is online").build();
+    }
 
     @POST
     @Path("/post")
@@ -39,7 +46,7 @@ public class MovieResource {
     }
 
     @GET
-    @Path("/movies/{id}")
+    @Path("/get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMovieById(@PathParam("id") int id) {
         Movie movie = movieDao.getMovieById(id);

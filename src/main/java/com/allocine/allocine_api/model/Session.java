@@ -10,6 +10,10 @@ public class Session {
 
     // Constructors, getters, and setters
 
+    public Session() {
+
+    }
+
     public Session(Date startTime, String cinemaName) {
         this.startTime = startTime;
         this.cinemaName = cinemaName;
