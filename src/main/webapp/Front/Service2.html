@@ -34,13 +34,13 @@
 
     </div>
     <script>
-        document.getElementById('searchCity').addEventListener('submit', async function (e) {
+        document.getElementById('cityForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             let city = document.getElementById('city').value;
 
             try {
-                let response = await fetch(`http://localhost:8080/ALLOCINE_API_war_exploded/movies?city=${city}`);
+                let response = await fetch(`http://localhost:8080/ALLOCINE_API_war_exploded/api/Service2/city?city=${city}`);
 
                 if (response.ok) {
                     let movies = await response.json();
@@ -53,7 +53,7 @@
                         resultElement.appendChild(listItem);
                     }
                 } else {
-                    alert(`Erreur: ${response.statusText}`);
+                    alert(`Erreur: Ville Non trouver`);
                 }
             } catch (error) {
                 console.error('Erreur:', error);

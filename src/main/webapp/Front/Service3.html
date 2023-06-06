@@ -7,31 +7,100 @@
 </head>
 
 <body>
-    <nav class="navbar">
-        <button onclick="window.location.href='Service1'">Premier Service</button>
-        <button onclick="window.location.href='Service2'">Deuxième Service</button>
-        <button onclick="window.location.href='Service3'">Troisième Service</button>
-    </nav>
-    <div id="content">
-        <div id="leftSidebar">
-            <!-- Contenu de la barre latérale gauche ici -->
-        </div>
-
-        <div id="mainContent">
-            <h1>Détails du film</h1>
-            <form id="filmForm">
-                <label for="title">Titre:</label><br>
-                <input type="text" id="title" name="title"><br>
-                <input type="submit" value="Chercher">
-            </form>
-            <div id="filmDetails"></div>
-        </div>
-
-        <div id="rightSidebar">
-            <!-- Contenu de la barre latérale droite ici -->
-        </div>
+<nav class="navbar">
+    <button onclick="window.location.href='Service1'">Premier Service</button>
+    <button onclick="window.location.href='Service2'">Deuxième Service</button>
+    <button onclick="window.location.href='Service3'">Troisième Service</button>
+</nav>
+<div id="content">
+    <div id="leftSidebar">
+        <!-- Contenu de la barre latérale gauche ici -->
     </div>
-    <script ></script>
+
+    <div id="mainContent">
+        <h1>Détails du film</h1>
+        <form id="filmForm">
+            <label for="title">Titre:</label><br>
+            <input type="text" id="title" name="title"><br>
+            <input type="submit" value="Chercher">
+        </form>
+        <div id="filmDetails"></div>
+    </div>
+
+    <div id="rightSidebar">
+        <!-- Contenu de la barre latérale droite ici -->
+    </div>
+</div>
+<script>
+    document.getElementById('filmForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        let title = document.getElementById('title').value;
+
+        try {
+            let response = await fetch(`http://localhost:8080/ALLOCINE_API_war_exploded/api/Service3/title?title=${title}`);
+            if (response.ok) {
+                let movie = await response.json();
+                console.log(movie);
+
+                let resultElement = document.getElementById('filmDetails');
+                resultElement.innerHTML = ''; // Effacer les résultats précédents
+
+                for (let key in movie) {
+                    if (movie.hasOwnProperty(key)) {
+                        let value = movie[key];
+
+                        if (Array.isArray(value)) {
+                            let listTitle = document.createElement('h3');
+                            listTitle.textContent = `${key}:`;
+                            resultElement.appendChild(listTitle);
+
+                            let list = document.createElement('ul');
+                            for (let item of value) {
+                                if (typeof item === 'object') {
+                                    let listItem = document.createElement('li');
+                                    listItem.textContent = `Start Time: ${new Date(item.startTime).toLocaleString()}, Cinema Name: ${item.cinemaName}, City: ${item.city}`;
+                                    list.appendChild(listItem);
+                                } else {
+                                    let listItem = document.createElement('li');
+                                    listItem.textContent = item;
+                                    list.appendChild(listItem);
+                                }
+                            }
+                            resultElement.appendChild(list);
+                        } else if (typeof value === 'object') {
+                            let objectTitle = document.createElement('h3');
+                            objectTitle.textContent = `${key}:`;
+                            resultElement.appendChild(objectTitle);
+
+                            let list = document.createElement('ul');
+                            for (let subKey in value) {
+                                let listItem = document.createElement('li');
+                                listItem.textContent = `${subKey}: ${value[subKey]}`;
+                                list.appendChild(listItem);
+                            }
+                            resultElement.appendChild(list);
+                        } else if (key === 'releaseDate') {
+                            let paragraph = document.createElement('p');
+                            paragraph.textContent = `${key}: ${new Date(value).toLocaleString()}`;
+                            resultElement.appendChild(paragraph);
+                        } else {
+                            let paragraph = document.createElement('p');
+                            paragraph.textContent = `${key}: ${value}`;
+                            resultElement.appendChild(paragraph);
+                        }
+                    }
+                }
+            } else {
+                alert("Erreur: pas de film avec ce titre" );
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+            alert('Une erreur s\'est produite lors de la récupération des détails du film.');
+        }
+    });
+</script>
+
 </body>
 
 </html>

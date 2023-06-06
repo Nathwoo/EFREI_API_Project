@@ -34,7 +34,7 @@
             let password = document.getElementById('password').value;
 
             try {
-                let response = await fetch(`http://localhost:8080/API_Project_war_exploded/api/login`, {
+                let response = await fetch(`http://localhost:8080/ALLOCINE_API_war_exploded/api/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -45,11 +45,10 @@
                     })
                 });
 
-
                 if (response.ok) {
                     //alert('Connexion réussie !');
                     // Redirige vers service1.html après une connexion réussie
-                    window.location.href = 'http://localhost:8080/API_Project_war_exploded/api/movies/post/';
+                    window.location.href = 'http://localhost:8080/ALLOCINE_API_war_exploded/api/Service1';
                 } else {
                     alert('Échec de la connexion. Veuillez vérifier vos identifiants.');
                 }
