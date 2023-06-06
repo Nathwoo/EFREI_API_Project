@@ -40,7 +40,7 @@ public class Tester {
         Movie newMovie = new Movie(1, "Movie 3", 150, "English",
                 Arrays.asList("English", "French"), "Director 3",
                 Arrays.asList("Actor 5", "Actor 6"), 18,
-                new Date(), Arrays.asList(new Session(new Date(), "Cinema5")));
+                new Date(), Arrays.asList(new Session(new Date(), "Cinema5", "city1")));
 
         Response postResponse = service.path("movies").path("post")
                 .request(MediaType.APPLICATION_JSON)
