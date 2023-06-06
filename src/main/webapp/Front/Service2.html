@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
     <title>Films dans la ville</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
@@ -26,6 +27,9 @@
                 <input type="submit" value="Chercher">
             </form>
             <div id="filmList"></div>
+
+            <div id="all_movie"></div>
+
         </div>
 
         <div id="rightSidebar">
@@ -45,7 +49,7 @@
                 if (response.ok) {
                     let movies = await response.json();
 
-                    let resultElement = document.getElementById('results');
+                    let resultElement = document.getElementById('filmList');
                     resultElement.innerHTML = '';
                     for (let movie of movies) {
                         let listItem = document.createElement('li');
@@ -53,15 +57,64 @@
                         resultElement.appendChild(listItem);
                     }
                 } else {
-                    alert(`Erreur: Ville Non trouver`);
+                    console.log(`Erreur: Ville Non trouver`);
                 }
             } catch (error) {
                 console.error('Erreur:', error);
-                alert('Une erreur s\'est produite lors de la récupération des films.');
+                console.log('Une erreur s\'est produite lors de la récupération des films.');
             }
         });
 
     </script>
+    <script>
+        // Fonction asynchrone pour récupérer les films
+        async function fetchMovies() {
+            // Envoyer une requête GET à l'API pour récupérer les films
+            let response = await fetch('http://localhost:8080/ALLOCINE_API_war_exploded/api/allmovie');
+
+            // Si la réponse est OK, alors on la transforme en JSON
+            if (response.ok) {
+                let movies = await response.json();
+
+                // Vérifie si des films ont été renvoyés
+                if (movies.length > 0) {
+                    // Sélectionner l'élément du DOM où l'on souhaite afficher les films
+                    let allMovieElement = document.getElementById('all_movie');
+
+                    // Créer et ajouter le titre h2
+                    let titleElement = document.createElement('h2');
+                    titleElement.textContent = 'Liste des films dans la base';
+                    allMovieElement.appendChild(titleElement);
+
+                    // Créer et ajouter la liste de films
+                    let movieList = document.createElement('ul');
+                    allMovieElement.appendChild(movieList);
+
+                    // Parcourir chaque film dans la réponse
+                    for (let movie of movies) {
+                        // Créer un élément li pour chaque film
+                        let movieElement = document.createElement('li');
+
+                        // Format the date
+                        let date = new Date(movie.releaseDate);
+                        let formattedDate = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
+
+                        // Mettre les détails du film dans l'élément li
+                        movieElement.textContent = `Titre: ${movie.title}, Réalisateur: ${movie.director}, Date de sortie: ${formattedDate}`;
+
+                        // Ajouter l'élément li à la liste de films
+                        movieList.appendChild(movieElement);
+                    }
+                }
+            } else {
+                console.log('Erreur de la requête HTTP:', response.status);
+            }
+        }
+
+        // Appeler la fonction fetchMovies lorsque la page est chargée
+        window.onload = fetchMovies;
+    </script>
+
 </body>
 
 </html>

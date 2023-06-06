@@ -13,12 +13,10 @@ import io.jsonwebtoken.security.Keys;
 import java.io.IOException;
 import java.security.Key;
 
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -40,7 +38,8 @@ public class MovieResource {
 
         String path = pathFront + "login.html" ;
         try {
-            htmlContent = new String(Files.readAllBytes(Paths.get(path)));
+            byte[] fileContentBytes = Files.readAllBytes(Paths.get(path));
+            htmlContent = new String(fileContentBytes, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error reading login.html").build();
@@ -72,10 +71,10 @@ public class MovieResource {
     @Produces(MediaType.TEXT_HTML)
     public Response getMoviesPostPage() {
         String htmlContent = "";
-
         String path = pathFront + "Service1.html" ;
         try {
-            htmlContent = new String(Files.readAllBytes(Paths.get(path)));
+            byte[] fileContentBytes = Files.readAllBytes(Paths.get(path));
+            htmlContent = new String(fileContentBytes, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error reading Service1.html").build();
@@ -101,10 +100,11 @@ public class MovieResource {
         String htmlContent = "";
         String path = pathFront + "Service2.html" ;
         try {
-            htmlContent = new String(Files.readAllBytes(Paths.get(path)));
+            byte[] fileContentBytes = Files.readAllBytes(Paths.get(path));
+            htmlContent = new String(fileContentBytes, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error reading login.html").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error reading Service2.html").build();
         }
         return Response.ok(htmlContent).build();
     }
@@ -128,10 +128,11 @@ public class MovieResource {
         String htmlContent = "";
         String path = pathFront + "Service3.html" ;
         try {
-            htmlContent = new String(Files.readAllBytes(Paths.get(path)));
+            byte[] fileContentBytes = Files.readAllBytes(Paths.get(path));
+            htmlContent = new String(fileContentBytes, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error reading login.html").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error reading Service3.html").build();
         }
         return Response.ok(htmlContent).build();
     }
@@ -150,6 +151,17 @@ public class MovieResource {
         }
         if (!matchingMovies.isEmpty()) {
             return Response.ok(matchingMovies).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @GET
+    @Path("/allmovie")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMovies() {
+        List<Movie> movies = movieDao.getAllMovies();
+        if (!movies.isEmpty()) {
+            return Response.ok(movies).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
@@ -206,6 +218,22 @@ public class MovieResource {
     }
 
     // Other Road
+
+    @GET
+    @Path("/styles.css")
+    @Produces("text/css")
+    public Response getCSS() {
+        String cssContent = "";
+        String path = pathFront + "styles.css" ;
+        try {
+            cssContent = new String(Files.readAllBytes(Paths.get(path)));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error reading styles.css").build();
+        }
+        return Response.ok(cssContent).build();
+    }
+
     @GET
     @Path("/movies/get")
     @Produces(MediaType.APPLICATION_JSON)
