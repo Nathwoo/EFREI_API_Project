@@ -1,5 +1,6 @@
 package com.allocine.allocine_api.client;
 
+import com.allocine.allocine_api.model.Logs;
 import com.allocine.allocine_api.model.Movie;
 import com.allocine.allocine_api.model.Session;
 import org.glassfish.jersey.client.ClientConfig;
@@ -20,11 +21,23 @@ public class Tester {
         // Create a JAX-RS client instance
         ClientConfig config = new ClientConfig();
         Client client = ClientBuilder.newClient(config);
-        WebTarget service = client.target("http://localhost:8080/ALLOCINE_API_war_exploded/api");
+        WebTarget service = client.target("http://localhost:8080/API_Project_war_exploded/api");
+        //Test login
+        System.out.println("Testing POST /login");
+        Logs logs = new Logs("admin", "password");
+        Response loginResponse = service.path("login")
+                .request(MediaType.APPLICATION_JSON)
+                        .post(Entity.json(logs));
+        if (loginResponse.getStatus() == Response.Status.UNAUTHORIZED.getStatusCode()) {
+            System.out.println("Logging failed");
+        } else {
+            System.out.println("Logging succeeded");
+        }
+
 
         // Test POST route to add a new movie
         System.out.println("Testing POST /movies");
-        Movie newMovie = new Movie(3, "Movie 3", 150, "English",
+        Movie newMovie = new Movie(1, "Movie 3", 150, "English",
                 Arrays.asList("English", "French"), "Director 3",
                 Arrays.asList("Actor 5", "Actor 6"), 18,
                 new Date(), Arrays.asList(new Session(new Date(), "Cinema5")));

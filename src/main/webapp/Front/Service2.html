@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Films dans la ville</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <button onclick="window.location.href='Service1'">Premier Service</button>
+        <button onclick="window.location.href='Service2'">Deuxième Service</button>
+        <button onclick="window.location.href='Service3'">Troisième Service</button>
+    </nav>
+    <div id="content">
+        <div id="leftSidebar">
+            <!-- Contenu de la barre latérale gauche ici -->
+        </div>
+
+        <div id="mainContent">
+
+            <h1>Films dans la ville</h1>
+            <form id="cityForm">
+                <label for="city">Ville:</label><br>
+                <input type="text" id="city" name="city"><br>
+                <input type="submit" value="Chercher">
+            </form>
+            <div id="filmList"></div>
+        </div>
+
+        <div id="rightSidebar">
+            <!-- Contenu de la barre latérale droite ici -->
+        </div>
+
+    </div>
+    <script>
+        document.getElementById('searchCity').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            let city = document.getElementById('city').value;
+
+            try {
+                let response = await fetch(`http://localhost:8080/ALLOCINE_API_war_exploded/movies?city=${city}`);
+
+                if (response.ok) {
+                    let movies = await response.json();
+
+                    let resultElement = document.getElementById('results');
+                    resultElement.innerHTML = '';
+                    for (let movie of movies) {
+                        let listItem = document.createElement('li');
+                        listItem.textContent = movie.title;
+                        resultElement.appendChild(listItem);
+                    }
+                } else {
+                    alert(`Erreur: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Une erreur s\'est produite lors de la récupération des films.');
+            }
+        });
+
+    </script>
+</body>
+
+</html>

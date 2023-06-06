@@ -1,0 +1,68 @@
+.navbar {
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    background-color: #fecc00;
+}
+
+.navbar button {
+    background-color: #fecc00;
+    border: none;
+    color: black;
+    padding: 14px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.navbar button:hover {
+    background-color: #FFDB45;
+    color: black;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    color: black;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+body>div {
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+#navigation {
+    background-color: black;
+}
+
+#content {
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+    padding: 0;
+}
+
+#leftSidebar,
+#rightSidebar {
+    background-color: #DCDCDC;
+    width: 25%;
+}
+
+#mainContent {
+    background-color: white;
+    width: 50%;
+    text-align: center;
+}

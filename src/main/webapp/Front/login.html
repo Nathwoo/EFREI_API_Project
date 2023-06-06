@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Page de connexion</title>
+    <link rel="stylesheet" type="text/css" href="../../../API_Project/src/main/webapp/Front/styles.css">
+</head>
+
+<body>
+<div id="content">
+    <div id="leftSidebar">
+        <!-- Contenu de la barre latérale gauche ici -->
+    </div>
+    <div id="mainContent">
+    <form id="loginForm">
+        <label for="username">Nom d'utilisateur :</label><br>
+        <input type="text" id="username" name="username"><br>
+        <label for="password">Mot de passe :</label><br>
+        <input type="password" id="password" name="password"><br>
+        <input type="submit" value="Se connecter">
+
+    </form>
+    </div>
+    <div id="rightSidebar">
+        <!-- Contenu de la barre latérale droite ici -->
+    </div>
+</div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            let username = document.getElementById('username').value;
+            let password = document.getElementById('password').value;
+
+            try {
+                let response = await fetch(`http://localhost:8080/API_Project_war_exploded/api/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+
+
+                if (response.ok) {
+                    //alert('Connexion réussie !');
+                    // Redirige vers service1.html après une connexion réussie
+                    window.location.href = 'http://localhost:8080/API_Project_war_exploded/api/movies/post/';
+                } else {
+                    alert('Échec de la connexion. Veuillez vérifier vos identifiants.');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Une erreur s\'est produite lors de la tentative de connexion.');
+            }
+        });
+
+
+    </script>
+</body>
+
+</html>
