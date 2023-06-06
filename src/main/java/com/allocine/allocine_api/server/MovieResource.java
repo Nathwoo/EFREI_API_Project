@@ -52,14 +52,10 @@ public class MovieResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(Logs logs) {
-        // Perform login logic here
         if (isValidCredentials(logs.getUsername(), logs.getPassword())) {
-            // Generate authentication token or session
             authToken = generateAuthToken();
-            // Return the authentication token as response
             return Response.ok().entity(logs).build();
         } else {
-            // Return an error response
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }
@@ -154,53 +150,33 @@ public class MovieResource {
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
+
     // utils
     private boolean isValidCredentials(String username, String password) {
-        // Compare username and password with expected values
-        // You can replace this with your own logic, such as validating against a database
         return username.equals("root") && password.equals("root");
     }
 
     private String generateAuthToken() {
-        // Generate a unique authentication token or session
-        // This can be a random string or a JWT (JSON Web Token) implementation
-
-        // Generate a secure signing key for JWT
         Key signingKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
-        // Build the JWT token with the desired claims
         String authToken = Jwts.builder()
-                .setSubject("username") // Set the subject of the token (e.g., username)
-                // You can include additional claims if needed, such as roles or permissions
-                .signWith(signingKey) // Sign the token with the signing key
-                .compact(); // Compact the token into its final string representation
+                .setSubject("username")
+                .signWith(signingKey)
+                .compact();
 
         return authToken;
     }
 
     private boolean verifyAuthToken(String authToken) {
         try {
-            // Parse the JWT token and validate its signature
             Jws<Claims> claimsJws = Jwts.parser()
-                    .setSigningKey(getSigningKey()) // Provide the same signing key used for token generation
+                    .setSigningKey(getSigningKey())
                     .parseClaimsJws(authToken);
-
-            // The token signature is valid
-            // You can perform additional checks or extract claims if needed
-            // For example, you can access the subject (username) as follows:
-            // String username = claimsJws.getBody().getSubject();
-
             return true;
         } catch (Exception e) {
-            // The token is either invalid, expired, or has an invalid signature
             return false;
         }
     }
     private Key getSigningKey() {
-        // Return the same signing key used for token generation
-        // Make sure to securely store and retrieve the key
-        // For simplicity, this example returns a new signing key each time,
-        // but in practice, you should store and retrieve the key securely
         return Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
@@ -241,22 +217,16 @@ public class MovieResource {
     @Path("/allmovie/del")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response delMovies(Movie movieToDelete) {
-        // Récupérer tous les films
         List<Movie> movies = movieDao.getAllMovies();
-
-        // Trouver le film correspondant
         for (Movie movie : movies) {
             if (movie.getId() == movieToDelete.getId()
                     && movie.getTitle().equals(movieToDelete.getTitle())
                     && movie.getReleaseDate().equals(movieToDelete.getReleaseDate())
                     && movie.getDirector().equals(movieToDelete.getDirector())) {
-                // Si le film correspond au film que vous voulez supprimer, supprimez-le
                 movieDao.deleteMovie(movie);
-                // Renvoyer une réponse 200 pour indiquer que l'opération s'est bien passée
                 return Response.ok().build();
             }
         }
-        // Si aucun film correspondant n'est trouvé, renvoyer une erreur 404
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
