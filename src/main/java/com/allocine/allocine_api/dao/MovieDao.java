@@ -25,6 +25,19 @@ public class MovieDao {
         }
         return null;
     }
+    public List<Movie> getMoviesByCity(String city){
+        List<Movie> moviesByCity = new ArrayList<>();
+        for (Movie movie : movies) {
+            List<Session> sessions = movie.getSessions();
+            for (Session session : sessions) {
+                if (session.getCity().equals(city)) {
+                    moviesByCity.add(movie);
+                }
+            }
+        }
+        return moviesByCity;
+
+    }
 
     public List<Movie> getMoviesByCinema(String cinema) {
         List<Movie> moviesByCinema = new ArrayList<>();

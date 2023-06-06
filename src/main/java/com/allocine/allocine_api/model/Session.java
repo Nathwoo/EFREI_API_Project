@@ -8,11 +8,18 @@ public class Session {
     private Date startTime;
     private String cinemaName;
 
+    private String city;
+
     // Constructors, getters, and setters
 
-    public Session(Date startTime, String cinemaName) {
+    public Session() {
+
+    }
+
+    public Session(Date startTime, String cinemaName,String city) {
         this.startTime = startTime;
         this.cinemaName = cinemaName;
+        this.city=city;
     }
 
     // Getters and setters
@@ -28,9 +35,15 @@ public class Session {
     public String getCinemaName() {
         return cinemaName;
     }
+    public String getCity() {
+        return city;
+    }
 
     public void setCinemaName(String cinemaName) {
         this.cinemaName = cinemaName;
+    }
+    public void setCity(String city) {
+        this.city = city;
     }
 }
 
