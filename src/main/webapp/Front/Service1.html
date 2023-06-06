@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Nouveau Film</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <button onclick="window.location.href='Service1'">Premier Service</button>
+        <button onclick="window.location.href='Service2'">Deuxième Service</button>
+        <button onclick="window.location.href='Service3'">Troisième Service</button>
+    </nav>
+    <div id="content">
+        <div id="leftSidebar">
+            <!-- Contenu de la barre latérale gauche ici -->
+        </div>
+        <div id="mainContent">
+
+            <h1>Publier un nouveau film</h1>
+            <form id="filmForm">
+                <label for="title">Titre:</label><br>
+                <input type="text" id="title" name="title"><br>
+                <label for="duration">Durée:</label><br>
+                <input type="text" id="duration" name="duration"><br>
+                <label for="language">Langue:</label><br>
+                <input type="text" id="language" name="language"><br>
+                <label for="subtitles">Sous-titres:</label><br>
+                <input type="text" id="subtitles" name="subtitles"><br>
+                <label for="director">Réalisateur:</label><br>
+                <input type="text" id="director" name="director"><br>
+                <label for="mainActors">Acteurs Principaux:</label><br>
+                <input type="text" id="mainActors" name="mainActors"><br>
+                <label for="minAge">Âge Minimum Requis:</label><br>
+                <input type="text" id="minAge" name="minAge"><br>
+                <label for="startDate">Date de Début:</label><br>
+                <input type="date" id="startDate" name="startDate"><br>
+                <label for="endDate">Date de Fin:</label><br>
+                <input type="date" id="endDate" name="endDate"><br>
+                <label for="daysOfWeek">Jours de la Semaine:</label><br>
+                <input type="text" id="daysOfWeek" name="daysOfWeek"><br>
+                <label for="showTime">Horaire de Début:</label><br>
+                <input type="time" id="showTime" name="showTime"><br>
+                <label for="city">Ville:</label><br>
+                <input type="text" id="city" name="city"><br>
+                <label for="cinemaAddress">Adresse du Cinéma:</label><br>
+                <input type="text" id="cinemaAddress" name="cinemaAddress"><br>
+                <input type="submit" value="Soumettre">
+            </form>
+        </div>
+
+        <div id="rightSidebar">
+            <!-- Contenu de la barre latérale droite ici -->
+        </div>
+
+    </div>
+    <script>
+        document.getElementById('filmForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            let newFilm = {
+                "id": 0,
+                "title": document.getElementById('title').value,
+                "duration": parseInt(document.getElementById('duration').value),
+                "language": document.getElementById('language').value,
+                "subtitlesLanguages": [document.getElementById('subtitles').value],
+                "director": document.getElementById('director').value,
+                "mainActors": [document.getElementById('mainActors').value],
+                "minimalAge": parseInt(document.getElementById('minAge').value),
+                "releaseDate": document.getElementById('startDate').value,
+                "sessions": [{
+                    "startTime": document.getElementById('showTime').value,
+                    "cinemaName": document.getElementById('cinemaAddress').value,
+                    "city": document.getElementById('city').value
+                }]
+            };
+
+
+            try {
+                let response = await fetch(`http://localhost:8080/ALLOCINE_API_war_exploded/film`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newFilm)
+                });
+
+                if (response.ok) {
+                    alert('Film soumis avec succès!');
+                } else {
+                    alert('Une erreur s\'est produite lors de la soumission du film');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Une erreur s\'est produite lors de la soumission du film');
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
