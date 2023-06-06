@@ -154,19 +154,6 @@ public class MovieResource {
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
-
-    @GET
-    @Path("/allmovie")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getMovies() {
-        List<Movie> movies = movieDao.getAllMovies();
-        if (!movies.isEmpty()) {
-            return Response.ok(movies).build();
-        }
-        return Response.status(Response.Status.NOT_FOUND).build();
-    }
-
-
     // utils
     private boolean isValidCredentials(String username, String password) {
         // Compare username and password with expected values
@@ -235,38 +222,42 @@ public class MovieResource {
     }
 
     @GET
-    @Path("/movies/get")
+    @Path("/allmovie")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllMovies() {
+    public Response getMovies() {
         List<Movie> movies = movieDao.getAllMovies();
-        return Response.ok(movies).build();
-    }
-
-    @GET
-    @Path("/movies/get/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getMovieById(@PathParam("id") int id) {
-        Movie movie = movieDao.getMovieById(id);
-        if (movie == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+        if (!movies.isEmpty()) {
+            return Response.ok(movies).build();
         }
-        return Response.ok(movie).build();
-    }
-
-    @GET
-    @Path("/cinemas/get/{cinema}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getMoviesByCinema(@PathParam("cinema") String cinema) {
-        List<Movie> movies = movieDao.getMoviesByCinema(cinema);
-        if (movies.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(movies).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response apiStatus() {
         return Response.ok().entity("API is online").build();
+    }
+
+    @DELETE
+    @Path("/allmovie/del")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response delMovies(Movie movieToDelete) {
+        // Récupérer tous les films
+        List<Movie> movies = movieDao.getAllMovies();
+
+        // Trouver le film correspondant
+        for (Movie movie : movies) {
+            if (movie.getId() == movieToDelete.getId()
+                    && movie.getTitle().equals(movieToDelete.getTitle())
+                    && movie.getReleaseDate().equals(movieToDelete.getReleaseDate())
+                    && movie.getDirector().equals(movieToDelete.getDirector())) {
+                // Si le film correspond au film que vous voulez supprimer, supprimez-le
+                movieDao.deleteMovie(movie);
+                // Renvoyer une réponse 200 pour indiquer que l'opération s'est bien passée
+                return Response.ok().build();
+            }
+        }
+        // Si aucun film correspondant n'est trouvé, renvoyer une erreur 404
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
 

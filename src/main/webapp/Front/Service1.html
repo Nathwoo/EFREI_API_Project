@@ -101,42 +101,36 @@
 
     </script>
     <script>
-        // Fonction asynchrone pour récupérer les films
         async function fetchMovies() {
-            // Envoyer une requête GET à l'API pour récupérer les films
             let response = await fetch('http://localhost:8080/ALLOCINE_API_war_exploded/api/allmovie');
 
-            // Si la réponse est OK, alors on la transforme en JSON
             if (response.ok) {
                 let movies = await response.json();
 
-                // Vérifie si des films ont été renvoyés
                 if (movies.length > 0) {
-                    // Sélectionner l'élément du DOM où l'on souhaite afficher les films
                     let allMovieElement = document.getElementById('all_movie');
-
-                    // Créer et ajouter le titre h2
                     let titleElement = document.createElement('h2');
                     titleElement.textContent = 'Liste des films dans la base';
                     allMovieElement.appendChild(titleElement);
 
-                    // Créer et ajouter la liste de films
                     let movieList = document.createElement('ul');
                     allMovieElement.appendChild(movieList);
 
-                    // Parcourir chaque film dans la réponse
                     for (let movie of movies) {
-                        // Créer un élément li pour chaque film
                         let movieElement = document.createElement('li');
 
-                        // Format the date
                         let date = new Date(movie.releaseDate);
                         let formattedDate = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
 
-                        // Mettre les détails du film dans l'élément li
                         movieElement.textContent = `Titre: ${movie.title}, Réalisateur: ${movie.director}, Date de sortie: ${formattedDate}`;
 
-                        // Ajouter l'élément li à la liste de films
+                        let deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Supprimer';
+                        deleteButton.addEventListener('click', function () {
+                            deleteMovie(movie);
+                        });
+
+                        movieElement.appendChild(deleteButton);
                         movieList.appendChild(movieElement);
                     }
                 }
@@ -145,7 +139,32 @@
             }
         }
 
-        // Appeler la fonction fetchMovies lorsque la page est chargée
+        async function deleteMovie(movie) {
+            let movieDetails = {
+                title: movie.title,
+                director: movie.director,
+                releaseDate: movie.releaseDate
+            };
+
+            let response = await fetch(`http://localhost:8080/ALLOCINE_API_war_exploded/api/allmovie/del`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(movieDetails)
+            });
+
+            if (response.ok) {
+                alert('Film supprimé avec succès !');
+                // Optionnel : Recharger la liste de films
+                document.getElementById('all_movie').innerHTML = '';
+                fetchMovies();
+            } else {
+                console.log('Erreur de la requête HTTP:', response.status);
+                alert('Erreur lors de la suppression du film.');
+            }
+        }
+
         window.onload = fetchMovies;
     </script>
 

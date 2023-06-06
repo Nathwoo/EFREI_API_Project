@@ -67,5 +67,12 @@ public class MovieDao {
     public void deleteMovie(int id) {
         movies.removeIf(movie -> movie.getId() == id);
     }
+    public void deleteMovie(Movie movieToDelete) {
+        movies.removeIf(movie -> movie.getId() == movieToDelete.getId()
+                && movie.getTitle().equals(movieToDelete.getTitle())
+                && movie.getReleaseDate().equals(movieToDelete.getReleaseDate())
+                && movie.getDirector().equals(movieToDelete.getDirector()));
+    }
+
 }
 

@@ -138,7 +138,13 @@
                     // Mettre les détails du film dans l'élément li
                     movieElement.textContent = `Titre: ${movie.title}, Réalisateur: ${movie.director}, Date de sortie: ${formattedDate}`;
 
-                    // Ajouter l'élément li à la liste de films
+                    let deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Supprimer';
+                    deleteButton.addEventListener('click', function () {
+                        deleteMovie(movie);
+                    });
+
+                    movieElement.appendChild(deleteButton);
                     movieList.appendChild(movieElement);
                 }
             }
@@ -147,7 +153,32 @@
         }
     }
 
-    // Appeler la fonction fetchMovies lorsque la page est chargée
+    async function deleteMovie(movie) {
+        let movieDetails = {
+            title: movie.title,
+            director: movie.director,
+            releaseDate: movie.releaseDate
+        };
+
+        let response = await fetch(`http://localhost:8080/ALLOCINE_API_war_exploded/api/allmovie/del`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(movieDetails)
+        });
+
+        if (response.ok) {
+            alert('Film supprimé avec succès !');
+            // Optionnel : Recharger la liste de films
+            document.getElementById('all_movie').innerHTML = '';
+            fetchMovies();
+        } else {
+            console.log('Erreur de la requête HTTP:', response.status);
+            alert('Erreur lors de la suppression du film.');
+        }
+    }
+
     window.onload = fetchMovies;
 </script>
 
