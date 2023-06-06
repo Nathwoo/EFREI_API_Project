@@ -109,16 +109,17 @@ public class MovieResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addMovie(Movie movie) {
-
+        movieDao.addMovie(movie);
+        // Return a success response
+        return Response.ok().entity(movie).build();
+        /*
         if (verifyAuthToken(authToken)) {
             movieDao.addMovie(movie);
             // Return a success response
-            return Response.status(Response.Status.CREATED)
-                    .entity(movie)
-                    .build();
+            return Response.ok().entity(movie).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
+        }*/
 
     }
     private boolean verifyAuthToken(String authToken) {

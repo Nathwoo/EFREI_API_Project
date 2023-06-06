@@ -57,7 +57,9 @@
         console.log("Hello")
         document.getElementById('filmForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-
+            let releaseDate = document.getElementById('startDate').value;
+            let startTime = document.getElementById('showTime').value;
+            let combinedDateTime = `${releaseDate}T${startTime}`;
             let newFilm = {
                 "id": 0,
                 "title": document.getElementById('title').value,
@@ -69,7 +71,7 @@
                 "minimalAge": parseInt(document.getElementById('minAge').value),
                 "releaseDate": document.getElementById('startDate').value,
                 "sessions": [{
-                    "startTime": document.getElementById('showTime').value,
+                    "startTime": combinedDateTime,
                     "cinemaName": document.getElementById('cinemaAddress').value,
                     "city": document.getElementById('city').value
                 }]
