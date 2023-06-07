@@ -3,7 +3,6 @@ package com.allocine.allocine_api.server;
 import com.allocine.allocine_api.dao.MovieDao;
 import com.allocine.allocine_api.model.Logs;
 import com.allocine.allocine_api.model.Movie;
-import com.allocine.allocine_api.model.Session;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -28,6 +27,7 @@ public class MovieResource {
     //String pathFront = "../../Users/nprov/Desktop/COURS_EFREI/M1/API & Webservices/API_Project/src/main/webapp/Front/";
     String pathFront = "../../../EFREI_API_Project/src/main/webapp/Front/";
     static String authToken = "";
+    Key signingKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     //------------------------------------------------------------------------------------------------------------------------------------------//
     //------------------------------------------------------------------------------------------------------------------------------------------//
@@ -85,11 +85,12 @@ public class MovieResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addMovie(Movie movie) {
-        movieDao.addMovie(movie);
-        // Return a success response
-        return Response.status(Response.Status.CREATED)
-                .entity(movie)
-                .build();
+        if (verifyAuthToken(authToken)) {
+            movieDao.addMovie(movie);
+            return Response.ok().entity(movie).build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
     }
     //------------------------------------------------------------------------------------------------------------------------------------------//
     //------------------------------------------------------------------------------------------------------------------------------------------//
@@ -164,7 +165,6 @@ public class MovieResource {
     }
 
     private String generateAuthToken() {
-        Key signingKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         String authToken = Jwts.builder()
                 .setSubject("username")
                 .signWith(signingKey)
@@ -176,15 +176,12 @@ public class MovieResource {
     private boolean verifyAuthToken(String authToken) {
         try {
             Jws<Claims> claimsJws = Jwts.parser()
-                    .setSigningKey(getSigningKey())
+                    .setSigningKey(signingKey)
                     .parseClaimsJws(authToken);
             return true;
         } catch (Exception e) {
             return false;
         }
-    }
-    private Key getSigningKey() {
-        return Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
     //------------------------------------------------------------------------------------------------------------------------------------------//
     //------------------------------------------------------------------------------------------------------------------------------------------//
